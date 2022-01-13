@@ -1,0 +1,4 @@
+Isotope,Mass,Relative abundance,Mass tolerance,Ratio tolerance,Required
+63Cu,62.9295975,0.6915,NA,NA,Y
+65Cu,64.9277895,0.3085,0.0015,3,Y
+Apo,-60.91395,NA,NA,NA,O
