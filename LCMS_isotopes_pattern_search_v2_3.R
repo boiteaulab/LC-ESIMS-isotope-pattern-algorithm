@@ -1,4 +1,5 @@
 #Rene Boiteau, 12/21/20 - File for Batch processing of mzXML files. 
+# Fixed after R update on 7/02/2024
 
 library(xcms)
 
@@ -159,16 +160,16 @@ featurebinning<-function(results,mzxcms,background,peakwidth){
       results2<-results[order(results[,4],decreasing=TRUE),]
       
       #Remove elements that don't appear at least 2x
-      results2<-results2[!isUnique(round(results2[,5],digits=3)),]
-      
+      results2<-results2[duplicated(round(results2[,5],digits=3),keep = 'first'),]
+
       #Remove duplicate masses, selecting max intensity scan
       results2<-results2[!duplicated(round(results2[,5],digits=3)),]
       
       #Calculate correlation coefficient for each element
       slope<-0
       rsquare<-0  
-      
-      if(class(results2)=='matrix'){
+  
+      if(is.matrix(results2)){
         if(nrow(results2)>1){
           for(m in 1:nrow(results2)){
             EIC1<-rawEIC(mzxcms,mzrange=c(-eicwidth,eicwidth)+results2[m,3],rtrange=c(-peakwidth,peakwidth)+results2[m,2])
@@ -314,8 +315,8 @@ Isotope_pipeline <- function(isotopepattern,mzxcms,timerange,background,peakwidt
   print(paste('Results:',nrow(results)))
   
   
-  if(class(results)=='matrix'){
-  
+  if(length(results)>2){
+
     #Bin results by mass and remove patterns that only appear 1x:
     binnedresults<-featurebinning(results,mzxcms,background,peakwidth)
     binnedresults$slope<- binnedresults$slope*ratio
